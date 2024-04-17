@@ -1,0 +1,207 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load custom_filters %}
+
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+
+<style>
+    .content-block {
+        display: none;
+    }
+    #main_info-content {
+        display: block;
+    }
+</style>
+
+{% if clan_info %}
+
+<div class="container-fluid">
+    <div class="row">
+
+        <nav class="col-md-2 d-none d-md-block  sidebar">
+
+            <div class="container text-center">
+                <img src="{{ clan_info.badgeUrls.medium }}" class="rounded mx-auto d-block" alt="clan icon" width="200">
+
+                <div class="container text-center">
+                    {% for f in clan_info.labels %}
+                    <img src="{{ f.iconUrls.small }}" width="50" alt="">
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="container text-center mt-3">
+                <h2>{{ clan_info.name }}</h2>
+            </div>
+
+            <div class="sidebar-sticky">
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#" id="main_info">Основна інформація</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" id="members_list">Учасникі клану</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" id="clan_capital">Столиця клану</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" id="clan_capital_raid">Клановий рейд</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" id="ccr_history">Історія кланових рейдів</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+            <div id="main_info-content" class="content-block">
+                <div class="col p-3">
+                    <table class="table table-hover">
+                        <thead>
+                        <tr class="table-dark">
+                            <th>key</th>
+                            <th>value</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for key, value in clan_info.items %}
+                        {% if key not in exclude_keys %}
+                        <tr>
+                            {% if key == 'location' %}
+                            <td>{{key|split_camel_case}}</td>
+                            <td>{{value.name}} {{value.countryCode}}</td>
+
+                            {% elif key == 'capitalLeague' %}
+                            <td>{{key|split_camel_case}}</td>
+                            <td>{{value.name}}</td>
+
+                            {% elif key == 'warLeague' %}
+                            <td>{{key|split_camel_case}}</td>
+                            <td>{{value.name}}</td>
+
+                            {% else %}
+                            <td>{{key|split_camel_case}}</td>
+                            <td>{{value}}</td>
+
+                            {% endif %}
+                        </tr>
+                        {% endif %}
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div id="members_list-content" class="content-block">
+                <div class="col p-3">
+                    <table class="table table-hover">
+                        <thead>
+                        <tr class="table-dark">
+                            <th>name</th>
+                            <th>role</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for member in clan_info.memberList %}
+                        <tr>
+                            <td>
+                                <a href="{% url 'player' member.tag|slice:'1:' %}">{{ member.name }}</a>
+                            </td>
+                            <td>{{ member.role }}</td>
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div id="clan_capital-content" class="content-block">
+                <div class="col p-3">
+                    <table class="table table-hover">
+                        <thead>
+                        <tr class="table-dark">
+                            <th>name</th>
+                            <th>districtHallLevel</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for f in clan_info.clanCapital.districts %}
+                        <tr>
+                            <td>{{ f.name }}</td>
+                            <td>{{ f.districtHallLevel }}</td>
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div id="clan_capital_raid-content" class="content-block">
+                <div class="col p-3">
+                    <h2> Останній клановий рейд</h2>
+                </div>
+            </div>
+            <div id="ccr_history-content" class="content-block">
+                <div class="col p-3">
+                    <table class="table table-hover text-center">
+
+                        <thead>
+                        <tr class="table-dark">
+                            <th>state</th>
+                            <th>start Time</th>
+                            <th>end Time</th>
+                            <th>capital Total Loot</th>
+                            <th>raids Completed</th>
+                            <th>total Attacks</th>
+                            <th>enemy Districts Destroyed</th>
+                            <th>offensive Reward</th>
+                            <th>defensive Reward</th>
+                        </tr>
+                        </thead>
+
+                        <tbody>
+                        {% for info in ccr %}
+                        <tr>
+                            <td>{{info.state}}</td>
+                            <td>{{ info.startTime|date_converter }}</td>
+                            <td>{{info.endTime|date_converter}}</td>
+                            <td>{{info.capitalTotalLoot}}</td>
+                            <td>{{info.raidsCompleted}}</td>
+                            <td>{{info.totalAttacks}}</td>
+                            <td>{{info.enemyDistrictsDestroyed}}</td>
+                            <td>{{info.offensiveReward}}</td>
+                            <td>{{info.defensiveReward}}</td>
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('.nav-link').on('click', function(e) {
+            e.preventDefault();
+            let id = $(this).attr('id');
+            $('.content-block').hide();
+            $('#' + id + '-content').show();
+        });
+    });
+</script>
+
+
+{% else %}
+<div class="container text-center">
+    <img src="{% static 'orange_error.png' %}" width="200" alt="error">
+    <h2>Інформація про клан відсутня</h2>
+    <h5>тег введено не вірно</h5>
+</div>
+{% endif %}
+{% endblock %}
+
+
