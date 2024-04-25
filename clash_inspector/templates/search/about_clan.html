@@ -141,40 +141,63 @@
                 </div>
             </div>
             <div id="ccr_history-content" class="content-block">
-                <div class="col p-3">
-                    <table class="table table-hover text-center">
 
-                        <thead>
-                        <tr class="table-dark">
-                            <th>state</th>
-                            <th>start Time</th>
-                            <th>end Time</th>
-                            <th>capital Total Loot</th>
-                            <th>raids Completed</th>
-                            <th>total Attacks</th>
-                            <th>enemy Districts Destroyed</th>
-                            <th>offensive Reward</th>
-                            <th>defensive Reward</th>
-                        </tr>
-                        </thead>
 
-                        <tbody>
-                        {% for info in ccr %}
-                        <tr>
-                            <td>{{info.state}}</td>
-                            <td>{{ info.startTime|date_converter }}</td>
-                            <td>{{info.endTime|date_converter}}</td>
-                            <td>{{info.capitalTotalLoot}}</td>
-                            <td>{{info.raidsCompleted}}</td>
-                            <td>{{info.totalAttacks}}</td>
-                            <td>{{info.enemyDistrictsDestroyed}}</td>
-                            <td>{{info.offensiveReward}}</td>
-                            <td>{{info.defensiveReward}}</td>
-                        </tr>
-                        {% endfor %}
-                        </tbody>
+                <div class="accordion" id="accordionExample">
+                    {% for info in ccr %}
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="heading{{ info.startTime }}">
+                            <button class="accordion-button"
+                                    type="button"
+                                    data-bs-toggle="collapse"
+                                    data-bs-target="#collapse{{ info.startTime }}"
+                                    aria-expanded="false"
+                                    aria-controls="collapse{{ info.startTime }}">
 
-                    </table>
+                                {{ info.state }} |
+                                {{ info.startTime|date_converter }} - {{ info.endTime|date_converter }}
+
+                            </button>
+                        </h2>
+
+                        <div id="collapse{{ info.startTime }}"
+                             class="accordion-collapse collapse"
+                             aria-labelledby="heading{{ info.startTime }}"
+                             data-bs-parent="#accordionExample">
+
+                            <div class="accordion-body">
+                                <table class="table table-hover text-center">
+                                    <thead>
+                                    <tr>
+                                        <th>state</th>
+                                        <th>start Time</th>
+                                        <th>end Time</th>
+                                        <th>capital Total Loot</th>
+                                        <th>raids Completed</th>
+                                        <th>total Attacks</th>
+                                        <th>enemy Districts Destroyed</th>
+                                        <th>offensive Reward</th>
+                                        <th>defensive Reward</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td>{{ info.state }}</td>
+                                        <td>{{ info.startTime|date_converter }}</td>
+                                        <td>{{ info.endTime|date_converter }}</td>
+                                        <td>{{ info.capitalTotalLoot }}</td>
+                                        <td>{{ info.raidsCompleted }}</td>
+                                        <td>{{ info.totalAttacks }}</td>
+                                        <td>{{ info.enemyDistrictsDestroyed }}</td>
+                                        <td>{{ info.offensiveReward }}</td>
+                                        <td>{{ info.defensiveReward }}</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
                 </div>
             </div>
         </main>
