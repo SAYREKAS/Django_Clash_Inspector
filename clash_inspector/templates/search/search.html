@@ -11,47 +11,56 @@
 
     <div class="row">
 
-        <div class="col">
-            <div class="h-100 p-5 text-bg-dark rounded-5">
+        <div class="col mb-3">
+            <div class="h-100 p-5  text-bg-dark rounded-5">
                 <img class="rounded mx-auto d-block" src="{% static 'player.png' %}" alt="" height="200">
 
                 {% if player_error %}
                 <div class="alert alert-danger mt-3" role="alert">
                     {{player_error}}
                 </div>
+
                 {% else %}
                 <h3 class="mt-3">Пошук інформації про гравця</h3>
                 {% endif %}
 
                 <form action="{% url 'player_search' %}" method="post">
                     {% csrf_token %}
+
                     <div class="d-grid mt-3">
                         <input name="player_tag" type="text" class="form-control me-2" placeholder="Тег гравця"
                                aria-label="Search" required>
                     </div>
+
                     <div class="d-grid mt-3">
                         <button class="btn btn-outline-success" type="submit">шукати</button>
                     </div>
+
                 </form>
             </div>
         </div>
 
-        <div class="col">
+        <div class="col mb-3">
             <div class="h-100 p-5 text-bg-dark rounded-5">
                 <img class="rounded mx-auto d-block" src="{% static 'clan.png' %}" alt="" height="200">
+
                 {% if clan_error %}
                 <div class="alert alert-danger mt-3" role="alert">
                     {{clan_error}}
                 </div>
+
                 {% else %}
                 <h3 class="mt-3">Пошук інформації про клан</h3>
+
                 {% endif %}
                 <form action="{% url 'clan_search' %}" method="post">
+
                     {% csrf_token %}
                     <div class="d-grid gap-2 mt-3">
                         <input name="clan_tag" type="text" class="form-control me-2" placeholder="Тег клану"
                                aria-label="Search" required>
                     </div>
+
                     <div class="d-grid gap-2 mt-3">
                         <button class="btn btn-outline-success" type="submit">шукати</button>
                     </div>
@@ -67,6 +76,7 @@
         {{ goldpass_duration.endTime|date_converter }}
     </h5>
 </div>
+
 <p>player_info - #YLQJPGQL</p>
 <p>clan_info - #U2VLCVC</p>
 
