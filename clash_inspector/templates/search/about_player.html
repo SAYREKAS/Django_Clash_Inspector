@@ -1,18 +1,12 @@
 {% extends 'base.html' %}
-
 {% load static %}
-
 {% load custom_filters %}
-
 {% block title %}{{ title }}{% endblock %}
-
 {% block content %}
-
 <div class="container">
     <div class="row">
-        <div class="col-md-3">
-            <ul class="nav nav-tabs left-tabs">
-
+        <div class="col-md-3 text-center">
+            <ul class="nav flex-column nav-pills me-3">
                 <div class="container text-center">
 
                     <div class="text-center">
@@ -26,7 +20,7 @@
                     </div>
 
                     <div class="container mt-3">
-                        <h1>{{ player_info.name }} </h1>
+                        <h3>{{ player_info.name }} </h3>
                     </div>
 
                 </div>
@@ -78,8 +72,10 @@
                 <div class="tab-content">
 
                     <article class="tab-pane active" id="main_info">
+                        <div class="container text-center">
+                            <h4 class="my-3">Основна інформація</h4>
+                        </div>
                         <table class="table table-hover w-100">
-
                             <tbody>
                             {% for key, value in player_info.items %}
                             {% if key not in exclude_keys %}
@@ -113,12 +109,12 @@
                     </article>
 
                     <article class="tab-pane" id="legend_stats">
-                        <h5 class="md-3">Всього трофеїв - {{ legendary_stats.legendTrophies }}</h5>
-
+                        <div class="container text-center">
+                            <h4 class="my-3">Легендарна статистика</h4>
+                        </div>
                         <table class="table table-hover w-100">
-
                             <thead>
-                            <tr class="table-dark">
+                            <tr>
                                 <th>Сезон</th>
                                 <th>Ранг</th>
                                 <th>Трофеїв</th>
@@ -148,10 +144,15 @@
                             </tr>
                             </tbody>
                         </table>
+
+                        <h6 class="my-4 mx-1">Всього трофеїв - {{ legendary_stats.legendTrophies }}</h6>
+
                     </article>
 
                     <article class="tab-pane" id="hero">
-
+                        <div class="container text-center">
+                            <h4 class="my-3">Герої</h4>
+                        </div>
                         <div class="row row-cols-1 row-cols-md-3 g-2">
                             {% for hero in player_info.heroes %}
                             <div class="col">
@@ -177,9 +178,12 @@
                     </article>
 
                     <article class="tab-pane" id="hero_equipment">
+                        <div class="container text-center">
+                            <h4 class="my-3">Спорядження героїв</h4>
+                        </div>
                         <table class="table table-hover w-100">
                             <thead>
-                            <tr class="table-dark">
+                            <tr>
                                 <th>Спорядження героїв</th>
                                 <th>Рівень</th>
                                 <th></th>
@@ -202,11 +206,14 @@
                     </article>
 
                     <article class="tab-pane" id="spells">
+                        <div class="container text-center">
+                            <h4 class="my-3">Заклинання</h4>
+                        </div>
                         <table class="table table-hover w-100">
                             <thead>
-                            <tr class="table-dark">
+                            <tr>
                                 <th>Заклинання</th>
-                                <th></th>
+                                <th>Рівень</th>
                                 <th></th>
                             </tr>
                             </thead>
@@ -227,95 +234,87 @@
                     </article>
 
                     <article class="tab-pane" id="troops">
-                        <div class="col p-3">
-                            <div class="row">
-                                <div class="col">
-                                    <table class="table table-hover w-100">
-                                        <thead>
-                                        <tr class="table-dark">
-
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        {% for troop in player_info.troops %}
-                                        {% if troop.village == 'home' %}
-                                        <tr>
-                                            <td>{{ troop.name }}</td>
-                                            <td>{{ troop.level }}/{{ troop.maxLevel }}</td>
-                                            {% if troop.level == troop.maxLevel %}
-                                            <td>✅</td>
-                                            {% else %}
-                                            <td></td>
-                                            {% endif %}
-                                        </tr>
+                        <div class="container text-center">
+                            <h4 class="my-3">Військо</h4>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <table class="table table-hover w-100">
+                                    <tbody>
+                                    {% for troop in player_info.troops %}
+                                    {% if troop.village == 'home' %}
+                                    <tr>
+                                        <td>{{ troop.name }}</td>
+                                        <td>{{ troop.level }}/{{ troop.maxLevel }}</td>
+                                        {% if troop.level == troop.maxLevel %}
+                                        <td>✅</td>
+                                        {% else %}
+                                        <td></td>
                                         {% endif %}
-                                        {% endfor %}
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <div class="col">
-                                    <table class="table table-hover">
-                                        <thead>
-                                        <tr class="table-dark">
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        {% for troop in player_info.troops %}
-                                        {% if troop.village == 'builderBase' %}
-                                        <tr>
-                                            <td>{{ troop.name }}</td>
-                                            <td>{{ troop.level }}/{{ troop.maxLevel }}</td>
-                                            {% if troop.level == troop.maxLevel %}
-                                            <td>✅</td>
-                                            {% else %}
-                                            <td></td>
-                                            {% endif %}
-                                        </tr>
+                                    </tr>
+                                    {% endif %}
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="col">
+                                <table class="table table-hover w-100">
+                                    <tbody>
+                                    {% for troop in player_info.troops %}
+                                    {% if troop.village == 'builderBase' %}
+                                    <tr>
+                                        <td>{{ troop.name }}</td>
+                                        <td>{{ troop.level }}/{{ troop.maxLevel }}</td>
+                                        {% if troop.level == troop.maxLevel %}
+                                        <td>✅</td>
+                                        {% else %}
+                                        <td></td>
                                         {% endif %}
-                                        {% endfor %}
-                                        </tbody>
-                                    </table>
-                                </div>
+                                    </tr>
+                                    {% endif %}
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </article>
 
                     <article class="tab-pane" id="achivement">
-                        <div class="col p-3">
-                            <div class="row">
-                                <div class="col">
-                                    <table class="table table-hover w-100">
+                        <div class="container text-center">
+                            <h4 class="my-3">Досягнення</h4>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <table class="table table-hover w-100">
+                                    <thead>
+                                    <tr>
+                                        <th>Імʼя</th>
+                                        <th>Зірок</th>
+                                        <th>Інформація</th>
+                                        <th>Для завершення</th>
+                                    </tr>
+                                    </thead>
 
-                                        <thead>
-                                        <tr class="table-dark">
-                                            <th>Імʼя</th>
-                                            <th>Зірок</th>
-                                            <th>Інформація</th>
-                                            <th>Для завершення</th>
-                                        </tr>
-                                        </thead>
+                                    <tbody>
+                                    {% for f in player_info.achievements %}
+                                    <tr>
+                                        <td>{{f.name}}</td>
+                                        <td>
+                                            {% if f.stars > 0 %}
+                                            {{f.stars|stars}}️
 
-                                        <tbody>
-                                        {% for f in player_info.achievements %}
-                                        <tr>
-                                            <td>{{f.name}}</td>
-                                            <td>
-                                                {% if f.stars > 0 %}
-                                                {{f.stars|stars}}️
+                                            {% else %}
+                                            ⭕️
 
-                                                {% else %}
-                                                ⭕️
+                                            {% endif %}
+                                        </td>
+                                        <td>{{f.info}}</td>
+                                        <td>{{f.completionInfo}}</td>
+                                    </tr>
+                                    {% endfor %}
+                                    </tbody>
 
-                                                {% endif %}
-                                            </td>
-                                            <td>{{f.info}}</td>
-                                            <td>{{f.completionInfo}}</td>
-                                        </tr>
-                                        {% endfor %}
-                                        </tbody>
-
-                                    </table>
-                                </div>
+                                </table>
                             </div>
                         </div>
                     </article>
@@ -325,18 +324,14 @@
         </div>
     </div>
 </div>
-
 <script
         src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
         integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
         crossorigin="anonymous"
 ></script>
-
 <script
         src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js"
         integrity="sha384-+YQ4JLhjyBLPDQt//I+STsc9iw4uQqACwlvpslubQzn4u2UU2UFM80nGisd026JF"
         crossorigin="anonymous"
 ></script>
-
 {% endblock %}
-
