@@ -1,4 +1,3 @@
-import datetime
 import os
 import requests
 from dotenv import load_dotenv
@@ -12,8 +11,6 @@ class ClashAPI:
         self.headers = {"Accept": "application/json", "Authorization": f"Bearer {self.CLASH_API}"}
 
     def player_info(self, player_tag: str) -> dict | bool:
-        """Отримайте інформацію про одного гравця за тегом гравця.
-        Теги гравців можна знайти в грі або в списках учасників клану."""
         url: str = f"https://api.clashofclans.com/v1/players/%23{player_tag.replace('#', '')}"
         info: dict = requests.get(url, headers=self.headers).json()
         try:
@@ -23,9 +20,6 @@ class ClashAPI:
             return info
 
     def clan_info(self, clan_tag: str) -> dict | bool:
-        """Get information about a single clan by clan tag. Clan tags can be found using clan search operation.
-        Note that clan tags start with hash character '#' and that needs to be URL-encoded properly to work in URL,
-        so for example clan tag '#2ABC' would become '%232ABC' in the URL."""
         url: str = f'https://api.clashofclans.com/v1/clans/%23{clan_tag.replace('#', '')}'
         info: dict = requests.get(url, headers=self.headers).json()
         try:
@@ -35,22 +29,13 @@ class ClashAPI:
             return info
 
     def ccr_seasons(self, clan_tag: str) -> dict:
-        """Retrieve clan's capital raid seasons"""
         url = f'https://api.clashofclans.com/v1/clans/%23{clan_tag.replace('#', '')}/capitalraidseasons'
         req = (requests.get(url, headers=self.headers).json())['items']
         return req
 
     def goldpass_duration(self) -> dict:
-        """Get information about the current gold pass season."""
         url = 'https://api.clashofclans.com/v1/goldpass/seasons/current'
         req = requests.get(url, headers=self.headers).json()
-        # start = datetime.datetime.strptime(req['startTime'], '%Y%m%dT%H%M%S.%fZ')
-        # end = datetime.datetime.strptime(req['endTime'], '%Y%m%dT%H%M%S.%fZ')
-        # end_days = (end - datetime.datetime.now()).days
-
-        # return {'start_time': start.strftime('%d.%m.%Y'),
-        #         'end_time': end.strftime('%d.%m.%Y'),
-        #         'end_days': end_days}
         return req
 
     def legend_stats(self, player_tag: str) -> dict | bool:
@@ -58,11 +43,39 @@ class ClashAPI:
             stats = self.player_info(player_tag)['legendStatistics']
         except KeyError:
             return False
-        else:
-            return stats
+
+        return stats
+
+    def search_clans(self, name: str, location_id: int = None, min_members: int = None, max_members: int = None,
+                     min_clan_points: int = None, min_clan_level: int = None, limit: int = None) -> dict | bool:
+
+        params = {
+            'name': name,
+            'locationId': location_id,
+            'minMembers': min_members,
+            'maxMembers': max_members,
+            'minClanPoints': min_clan_points,
+            'minClanLevel': min_clan_level,
+            'limit': limit
+        }
+
+        params = {k: v for k, v in params.items() if v}
+
+        url = 'https://api.clashofclans.com/v1/clans'
+
+        try:
+            req = requests.get(url, headers=self.headers, params=params).json()
+            if req.get('reason') == 'badRequest':
+                return False
+            else:
+                return req['items']
+        except Exception as ex:
+            print(f"An error occurred: {ex}")
+            return False
 
 # print(ClashAPI().player_info('#YLQJPGQL'))
 # print(ClashAPI().clan_info('#U2VLCVC'))
 # print(ClashAPI().goldpass_duration())
 # print(ClashAPI().legend_stats('#VGCY9ULV'))
-# pprint(ClashAPI().ccr_seasons(clan_tag='#U2VLCVC'))
+# print(ClashAPI().ccr_seasons(clan_tag='#U2VLCVC'))
+# print(ClashAPI().search_clans(name='otamani'))
