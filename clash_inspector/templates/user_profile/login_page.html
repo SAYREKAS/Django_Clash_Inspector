@@ -3,30 +3,68 @@
 {% block title %}Вхід{% endblock %}
 
 {% block content %}
+<div class=" py-3 py-md-5">
+    <div class="container">
+        <div class="row justify-content-md-center">
+            <div class="col-12 col-md-11 col-lg-8 col-xl-7 col-xxl-6">
+                <div class="text-bg-dark p-4 p-md-5 rounded shadow-sm">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="mb-5">
+                                <h3>Log in</h3>
+                            </div>
 
-<div class="container-sm">
-    <main class="form-signin w-100 m-auto">
-        {% if error %}
-        <div class="alert alert-danger" role="alert">
-            {{ error }}
+                            {% if form.non_field_errors %}
+                            <div class="alert alert-danger mt-3" role="alert">
+                                {{ form.non_field_errors }}
+                            </div>
+                            {% endif %}
+                            {% if form.username.errors %}
+                            <div class="alert alert-danger mt-3" role="alert">
+                                {{ form.username.errors }}
+                            </div>
+                            {% endif %}
+                            {% if form.password.errors %}
+                            <div class="alert alert-danger mt-3" role="alert">
+                                {{ form.password.errors }}
+                            </div>
+                            {% endif %}
+
+                        </div>
+                    </div>
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="row gy-3 gy-md-4 overflow-hidden">
+                            <div class="col-12">
+                                <label class="form-label">Ім'я користувача <span class="text-danger">*</span></label>
+                                {{ form.username }}
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">Пароль <span class="text-danger">*</span></label>
+                                {{ form.password }}
+                            </div>
+                            <div class="col-12">
+                                <div class="d-grid">
+                                    <button class="btn btn-lg btn-primary" type="submit">Увійти</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+
+
+                    <div class="row">
+                        <div class="col-12">
+                            <hr class="mt-5 mb-4 border-secondary-subtle">
+                            <div class="d-flex gap-2 gap-md-4 flex-column flex-md-row justify-content-md-end">
+                                <a href="{% url 'register_page' %}" class="link-secondary text-decoration-none">Create
+                                    new account</a>
+                                <a href="#!" class="link-secondary text-decoration-none">Forgot password</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        {% endif %}
-        <form method="post">
-            {% csrf_token %}
-            <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
-            <div class="form-floating mt-3">
-                <input type="text" class="form-control" id="floatingInput" placeholder="name@example.com"
-                       name="username">
-                <label for="floatingInput">Username</label>
-            </div>
-            <div class="form-floating mt-3">
-                <input type="password" class="form-control" id="floatingPassword" placeholder="Password"
-                       name="password">
-                <label for="floatingPassword">Password</label>
-            </div>
-            <button class="btn btn-primary w-100 py-2 mt-3" type="submit" control-id="ControlID-4">Sign in</button>
-        </form>
-    </main>
+    </div>
 </div>
-
 {% endblock %}
