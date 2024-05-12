@@ -1,59 +1,51 @@
-from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.models import User
-from django.shortcuts import render, HttpResponseRedirect, redirect
 from django.urls import reverse
+from django.contrib.auth import authenticate, login, logout
+from django.shortcuts import render, HttpResponseRedirect, redirect
+
+from .forms import UserRegisterForm, UserLoginForm
+from .models import UserProfile
 
 
 def user_profile(request):
-    user = User()
-    context = {
-        'user': user
+    profile = UserProfile.objects.all()
+    context: dict = {
+        'user_profile': profile,
     }
-    return render(request, 'user_profile/home.html', context)
+    return render(request, 'user_profile/profile.html', context)
 
 
 def register_page(request):
+    form = UserRegisterForm(request.POST or None)
+    context = {'form': form}
+
     if request.method == 'POST':
-        username = request.POST['username']
-        player_tag = request.POST['player_tag']
-        password1 = request.POST['password1']
-        password2 = request.POST['password2']
+        if form.is_valid():
+            form.save()
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password1')
+            user = authenticate(username=username, password=password)
+            if user:
+                login(request, user)
+                return HttpResponseRedirect(reverse('search'))
 
-        if password1 != password2:
-            error_message = 'Passwords do not match'
-            return render(request, 'user_profile/register_page.html', {'error_message': error_message})
-
-        else:
-            print('pass corected')
-            if User.objects.filter(username=username).exists():
-                print('User exist')
-                error_message = 'User already exsist'
-                return render(request, 'user_profile/register_page.html', {'error_message': error_message})
-            else:
-                User.objects.filter(username=username).exists()
-                user = User.objects.create_user(username=username, password=password2)
-                user.save()
-                return HttpResponseRedirect(reverse('login_page'))
-
-    return render(request, 'user_profile/register_page.html')
+    return render(request, 'user_profile/register_page.html', context)
 
 
 def login_page(request):
+    form = UserLoginForm(request=request)
     if request.method == 'POST':
-        username = request.POST['username']
-        password = request.POST['password']
-        user = authenticate(username=username, password=password)
-        if user:
-            login(request, user)
-            return HttpResponseRedirect(redirect_to=reverse('profile'))
-        else:
-            error = 'Incorect login or password'
-            context: dict = {
-                'error': error
-            }
-            return render(request, 'user_profile/login_page.html', context)
+        form = UserLoginForm(request=request, data=request.POST)
+        if form.is_valid():
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
+            user = authenticate(username=username, password=password)
+            if user:
+                login(request, user)
 
-    return render(request, 'user_profile/login_page.html')
+                return HttpResponseRedirect(reverse('search'))
+
+    context = {'form': form}
+    return render(request, 'user_profile/login_page.html', context)
 
 
 def log_out(request):
