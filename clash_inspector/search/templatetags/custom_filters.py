@@ -1,6 +1,7 @@
 from datetime import datetime
 import re
 from django import template
+
 register = template.Library()
 
 
@@ -10,14 +11,23 @@ def stars(count: int):
 
 
 @register.filter
-def date_converter(date: str):
+def date_converter(date: str) -> str:
     try:
-        date_object = datetime.strptime(date, '%Y%m%dT%H%M%S.%fZ')
-        return date_object.strftime('%d-%m-%Y %H:%M')
+        date_object = datetime.strptime(str(date), '%Y%m%dT%H%M%S.%fZ')
+        return date_object.strftime('%d.%m.%Y')
     except ValueError:
         return date
 
 
 @register.filter
-def split_camel_case(value):
-    return ' '.join(re.sub('([A-Z][a-z]+)', r' \1', re.sub('([A-Z]+)', r' \1', value)).split()).capitalize()
+def date_time_converter(date: str) -> str:
+    try:
+        date_object = datetime.strptime(str(date), '%Y%m%dT%H%M%S.%fZ')
+        return date_object.strftime('%H:%M %d.%m.%Y')
+    except ValueError:
+        return date
+
+
+@register.filter
+def split_camel_case(stroke: str) -> str:
+    return ' '.join(re.sub('([A-Z][a-z]+)', r' \1', re.sub('([A-Z]+)', r' \1', stroke)).split()).capitalize()
