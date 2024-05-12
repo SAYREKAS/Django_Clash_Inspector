@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+
+{% load custom_filters %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+
+<div class="container">
+    <div class="container text-center">
+        <table id="myTable" class="table table-hover w-100 mx-auto ">
+            <thead>
+            <tr class="table table-dark">
+                <th>Image</th>
+                <th>Name</th>
+                <th>Tag</th>
+                <th>Type</th>
+                <th>Location</th>
+                <th>Clan level</th>
+                <th>Clan points</th>
+                <th>Capital league</th>
+                <th>War frequency</th>
+                <th>War winStreak</th>
+                <th>War wins</th>
+                <th>War league</th>
+                <th>Members</th>
+                <th>Req. Townhall Lvl</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            {% for info in clan_info %}
+            <tr>
+                <td><img src="{{ info.badgeUrls.small }}" alt="" width="50"></td>
+                <td><a href="{% url 'clan' info.tag|slice:'1:' %}">{{ info.name }}</a></td>
+                <td>{{ info.tag }}</td>
+                <td>{{ info.type|split_camel_case }}</td>
+                <td>{{ info.location.name }} {{ info.location.countryCode }}</td>
+                <td>{{ info.clanLevel }}</td>
+                <td>{{ info.clanPoints }}</td>
+                <td>{{ info.capitalLeague.name|split_camel_case }}</td>
+                <td>{{ info.warFrequency|split_camel_case }}</td>
+                <td>{{ info.warWinStreak }}</td>
+                <td>{{ info.warWins }}</td>
+                <td>{{ info.warLeague.name }}</td>
+                <td>{{ info.members }}</td>
+                <td>{{ info.requiredTownhallLevel }}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+
+        </table>
+    </div>
+</div>
+
+<script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+<script>
+    $(document).ready( function () {
+        $('#myTable').DataTable();
+    } );
+</script>
+{% endblock %}
+
+
+
+
+
+
+
