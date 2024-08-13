@@ -1,0 +1,4 @@
+.idea
+.venv
+
+clash_inspector/db.sqlite3
